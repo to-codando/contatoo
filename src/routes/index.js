@@ -1,14 +1,14 @@
 import { routerFactory } from "lemejs"
 
 import { appNotFound } from "../components/appNotFound"
-import { appHello } from "../components/appHello"
+import { appCreateContact } from "../components/appCreateContact"
 
 const router = routerFactory()
 
 router.add({
   hash: '/',
   validator: /^#\/$/,
-  component: appHello,
+  component: appCreateContact,
   isInitial: true
 })
 
