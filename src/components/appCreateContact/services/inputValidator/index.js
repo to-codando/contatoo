@@ -1,7 +1,5 @@
 import { observerFactory } from "lemejs"
 
-export const appInputObserver = observerFactory({})
-
 export const validatorFactory = (componentProps) => {
 
 	const state = observerFactory({

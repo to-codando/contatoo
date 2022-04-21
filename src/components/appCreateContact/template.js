@@ -10,6 +10,7 @@ export default ({ state, props }) => /*html*/ `
             data-subtitle="Nome completo" 
             data-error-message="Informe o nome e o sobrenome."
             data-regex-validation="${state?.nameValidator}"
+            data-listen-event="clear-form-input"
         ></app-input>
 
         <app-input data-subtitle="E-mail"
@@ -19,7 +20,8 @@ export default ({ state, props }) => /*html*/ `
             data-is-valid="false"
             data-subtitle="E-mail" 
             data-error-message="Informe um e-mail válido."   
-            data-regex-validation="${state?.emailValidator}"     
+            data-regex-validation="${state?.emailValidator}"   
+            data-listen-event="clear-form-input"  
         ></app-input>
 
         <app-input
@@ -30,9 +32,15 @@ export default ({ state, props }) => /*html*/ `
             data-subtitle="Telefone" 
             data-error-message="Formato de telefone inválido"  
             data-regex-validation="${state?.phoneValidator}"
-            data-regex-format="${state?.regexFormat}"      
+            data-regex-format="${state?.regexFormat}"  
+            data-listen-event="clear-form-input"    
         ></app-input>
         
-        <app-button data-title="Salvar" data-theme="green" data-disabled="true"></app-button>
+        <app-button 
+            data-title="Salvar" 
+            data-theme="green" 
+            data-disabled="true"
+            data-emit-event="create-contact"
+        ></app-button>
     </form>
 `

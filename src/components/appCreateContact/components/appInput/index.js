@@ -1,10 +1,9 @@
 import { observerFactory } from 'lemejs'
 import template from "./template"
 import styles from "./styles"
-import { appInputObserver } from '../../services/inputValidator'
-import { debounceTime } from '../../../../helpers/debounce'
+import { formObserver } from '../../services/formValidator'
 import { validatorFactory } from '../../services/inputValidator'
-import { phonePipe } from '../../../../pipes'
+import { debounceTime, eventDrive, phonePipe } from '../../../../helpers'
 
 export const appInput = ({ props }) => {
 
@@ -16,14 +15,13 @@ export const appInput = ({ props }) => {
 
     const hooks = () => ({
         afterOnRender,
-        afterOnInit
+        afterOnInit,
+        beforeOnInit
     })
 
-    const inputFocus = (queryOnce) => {
-        state.on((data) => {
-            const inputElement = queryOnce('input')
-            inputElement.focus()
-            inputElement.setSelectionRange(-1, -1)            
+    const beforeOnInit = () => {
+        eventDrive.on(props.listenEvent, () => {
+            state.set({ ...props })
         })
     }
 
@@ -33,15 +31,24 @@ export const appInput = ({ props }) => {
         inputFocus(queryOnce)
     }
 
-    const afterOnInit = () => {    
-        inputState.on(debounceTime(validate, 1000))
+    const afterOnInit = () => {   
+        const wait = 0 
+        inputState.on(debounceTime(validate, wait))
     }   
+
+    const inputFocus = (queryOnce) => {
+        state.on((data) => {
+            const inputElement = queryOnce('input')
+            inputElement.focus()
+            inputElement.setSelectionRange(-1, -1)            
+        })
+    }
 
     const validate = (validation) => {
         const { errorMessage } = props
         const { value, isValid, isPristine  } = validation
         state.set({ ...state.get(), value, isValid, isPristine, errorMessage })
-        appInputObserver.set({[props.name]: {...validation}})
+        formObserver.set({[props.name]: {...validation}})
     }    
 
     return { template, styles, hooks, state }

@@ -1,31 +1,33 @@
 import { observerFactory } from "lemejs"
-import { appInputObserver } from "../../services/inputValidator"
+import { formObserver, isValidForm } from "../../services/formValidator"
 
 import template from "./template"
 import styles from "./styles"
+import { eventDrive } from "../../../../helpers"
 
-export const appButton = () => {
+export const appButton = ({ props }) => {
 	const state = observerFactory({
 		disabled: true,
 	})
 
 	const hooks = () => ({
 		beforeOnInit,
+		afterOnRender
 	})
 
 	const beforeOnInit = () => {
-		appInputObserver.on((form) => {
+		formObserver.on((form) => {
 			const disabled = !isValidForm(form)
 			state.set({ disabled })
 		})
 	}
 
-	const isValidForm = (form) => {
-        const formNameIsValid = form.name ? form.name.isValid : false
-		const formEmailIsValid = form.email ? form.email.isValid : false
-		const formPhoneIsValid = form.phone ? form.phone.isValid : false
-        
-		return formNameIsValid && formEmailIsValid && formPhoneIsValid
+	const afterOnRender = ({ on, queryOnce }) => {
+
+		const button = queryOnce('button')
+
+		on('click', button, () => eventDrive.emit(props.emitEvent))
+
 	}
 
 	return { template, styles, hooks, state }

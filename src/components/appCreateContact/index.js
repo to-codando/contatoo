@@ -1,9 +1,14 @@
+import { observerFactory } from "lemejs"
+
 import template from "./template"
 import styles from "./styles"
 
 import { appButton } from './components/appButton'
 import { appInput } from './components/appInput'
-import { observerFactory } from "lemejs"
+
+import { formObserver, isValidForm } from "./services/formValidator"
+import { eventDrive } from "../../helpers"
+import { store } from "../../store"
 
 export const appCreateContact = () => {  
 
@@ -20,10 +25,45 @@ export const appCreateContact = () => {
         form: { isValid: false }
     })
 
+    const hooks = () => ({
+        beforeOnInit
+    })
+
     const children = () => ({ 
         appButton, 
         appInput 
     })
 
-    return { template, styles, children, state }
+    const beforeOnInit = () => {
+        eventDrive.on('create-contact', createContact)
+        store.on(() => eventDrive.emit('clear-form-input'))
+    }
+
+    const createId = () => {
+        const { contacts } = store.get()
+        return contacts.length + 1
+    }
+
+    const createContact = () => {
+        const form = formObserver.get()
+        
+        if(!isValidForm(form)) return
+
+        const { contacts: oldContacts } = store.get()
+        
+        const newContact = { 
+            id: createId(),
+            name: form.name.value, 
+            email: form.email.value, 
+            phone: form.phone.value 
+        }
+
+        const contacts = [ ...oldContacts, newContact ]
+        store.set({ ...store.get(), contacts })
+        formObserver.set({})
+
+        console.log(store.get())
+    }
+
+    return { template, styles, children, state, hooks }
 }

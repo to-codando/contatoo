@@ -1,7 +1,7 @@
 import { observerFactory } from "lemejs"
 
-export const state = observerFactory({
-    message: 'Hello World!'
+export const store = observerFactory({
+    contacts: []
 })
 
 
