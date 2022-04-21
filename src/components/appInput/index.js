@@ -2,34 +2,46 @@ import { observerFactory } from 'lemejs'
 import template from "./template"
 import styles from "./styles"
 
-export const appInput = () => {  
+import { debounceTime } from '../../helpers/debounce'
+import { nameValidator } from '../../directives/nameValidator'
+import { phonePipe } from '../../pipes'
 
-    const state = observerFactory({ value: ''})
+export const appInput = ({ props }) => {
+
+    const state = observerFactory({ 
+        ...props,
+    })
+
+    const [inputNameState, inputNameValidator ] = nameValidator(props)
 
     const hooks = () => ({
+        afterOnRender,
         afterOnInit
     })
 
-    const afterOnInit = ({ on, queryOnce }) => {
-        const inputElement = queryOnce('input')
-
-        on('keyup', inputElement, () => {
-            const value = inputElement.value
-
-            if(value) {
-                inputElement.previousElementSibling.classList.add('elevation')
-                inputElement.parentElement.classList.add('gutter')
-                return
-            }
-            
-            inputElement.previousElementSibling.classList.remove('elevation')
-            inputElement.parentElement.classList.remove('gutter')
+    const inputFocus = (queryOnce) => {
+        state.on((data) => {
+            const inputElement = queryOnce('input')
+            inputElement.focus()
+            inputElement.setSelectionRange(-1, -1)            
         })
-        
-
     }
 
+    const afterOnRender = ({ on, queryOnce }) => {
+        const inputElement = queryOnce('input')
+        on('keyup', inputElement, inputNameValidator(queryOnce, phonePipe))
+        inputFocus(queryOnce)
+    }
 
+    const afterOnInit = () => {    
+        inputNameState.on(debounceTime(validate, 1000))
+    }
+
+    const validate = (validation) => {
+        const { errorMessage } = props
+        const { value, isValid, isPristine  } = validation
+        state.set({ ...state.get(), value, isValid, isPristine, errorMessage })
+    }    
 
     return { template, styles, hooks, state }
 }

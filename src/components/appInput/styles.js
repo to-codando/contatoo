@@ -33,15 +33,16 @@ export default (root, props) =>   /*css*/`
         padding-bottom: 5px;    
         text-transform: uppercase;
         font-size: 1rem;
-        color: #666;
+        color: #999;
         position:absolute;
-        top:50%;
+        top:calc(50%);
         left:1rem;
         transition: all 0.5s;
         transform: translateY(-50%);
     }
 
     ${root} .elevation{
+        color: #666;
         font-weight:bold;
         font-size: .7rem;
         top: -0.5rem;
@@ -58,5 +59,28 @@ export default (root, props) =>   /*css*/`
         border:0;
         background: #DEE7F5;
         color:#666    
+    }
+
+    ${root} .ctx-input.ctx-is-invalid {
+        border:1px #E47B7B solid;
+        color: #E47B7B;
+        background: #FFDBDB
+    }
+
+    ${root} .ctx-input.ctx-is-valid {
+        border:1px #4B7B78 solid;
+        color: #4B7B78;
+        background: #D9FCFA
+    }
+
+    ${root} .ctx-error-message {
+        display:block;
+        width:100%;
+        padding: .5rem 0 0 0;
+        color: #E47B7B;
+        font-size: .8rem;
+        border-radius: 5px;
+        position:absolute;
+        bottom: -1rem
     }
 `
