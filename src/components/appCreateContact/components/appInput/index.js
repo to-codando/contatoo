@@ -1,10 +1,10 @@
 import { observerFactory } from 'lemejs'
 import template from "./template"
 import styles from "./styles"
-
-import { debounceTime } from '../../helpers/debounce'
-import { nameValidator } from '../../directives/nameValidator'
-import { phonePipe } from '../../pipes'
+import { appInputObserver } from '../../services/inputValidator'
+import { debounceTime } from '../../../../helpers/debounce'
+import { validatorFactory } from '../../services/inputValidator'
+import { phonePipe } from '../../../../pipes'
 
 export const appInput = ({ props }) => {
 
@@ -12,7 +12,7 @@ export const appInput = ({ props }) => {
         ...props,
     })
 
-    const [inputNameState, inputNameValidator ] = nameValidator(props)
+    const [inputState, inputValidator ] = validatorFactory(props)
 
     const hooks = () => ({
         afterOnRender,
@@ -29,19 +29,21 @@ export const appInput = ({ props }) => {
 
     const afterOnRender = ({ on, queryOnce }) => {
         const inputElement = queryOnce('input')
-        on('keyup', inputElement, inputNameValidator(queryOnce, phonePipe))
+        on('keyup', inputElement, inputValidator(queryOnce, phonePipe))
         inputFocus(queryOnce)
     }
 
     const afterOnInit = () => {    
-        inputNameState.on(debounceTime(validate, 1000))
-    }
+        inputState.on(debounceTime(validate, 1000))
+    }   
 
     const validate = (validation) => {
         const { errorMessage } = props
         const { value, isValid, isPristine  } = validation
         state.set({ ...state.get(), value, isValid, isPristine, errorMessage })
+        appInputObserver.set({[props.name]: {...validation}})
     }    
 
     return { template, styles, hooks, state }
 }
+

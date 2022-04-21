@@ -15,14 +15,13 @@ export default ({ state, html }) => {
     }    
 
     const getInputCssClass = () => {
+        if(isValid && isPristine && value) return 'ctx-is-valid'
+        if(isValid && !isPristine && value) return 'ctx-is-valid'
         if(isValid && isPristine && !value) return ''
 
-        if(isValid && !isPristine && value) return 'ctx-is-valid'
-        if(isValid && isPristine && value) return 'ctx-is-valid'
-
+        if(!isValid && !isPristine && !value) return 'ctx-is-invalid'
         if(!isValid && isPristine && value) return 'ctx-is-invalid'
         if(!isValid && !isPristine && value) return 'ctx-is-invalid'
-        if(!isValid && !isPristine && !value) return 'ctx-is-invalid'
         
         return ''
     }

@@ -1,8 +1,8 @@
 import template from "./template"
 import styles from "./styles"
 
-import { appButton } from '../appButton'
-import { appInput } from '../appInput'
+import { appButton } from './components/appButton'
+import { appInput } from './components/appInput'
 import { observerFactory } from "lemejs"
 
 export const appCreateContact = () => {  
@@ -16,7 +16,8 @@ export const appCreateContact = () => {
         nameValidator,
         phoneValidator,
         emailValidator,
-        regexFormat
+        regexFormat,
+        form: { isValid: false }
     })
 
     const children = () => ({ 

@@ -3,6 +3,7 @@ export default ({ state, props }) => /*html*/ `
 
     <form class="ctx-form">
         <app-input 
+            data-name="name"
             data-value=""
             data-is-pristine="true"
             data-is-valid="false"
@@ -12,6 +13,7 @@ export default ({ state, props }) => /*html*/ `
         ></app-input>
 
         <app-input data-subtitle="E-mail"
+            data-name="email"
             data-value=""
             data-is-pristine="true"
             data-is-valid="false"
@@ -21,6 +23,7 @@ export default ({ state, props }) => /*html*/ `
         ></app-input>
 
         <app-input
+            data-name="phone"
             data-value=""
             data-is-pristine="true"
             data-is-valid="false"
@@ -30,6 +33,6 @@ export default ({ state, props }) => /*html*/ `
             data-regex-format="${state?.regexFormat}"      
         ></app-input>
         
-        <app-button data-title="Salvar" data-theme="green"></app-button>
+        <app-button data-title="Salvar" data-theme="green" data-disabled="true"></app-button>
     </form>
 `
